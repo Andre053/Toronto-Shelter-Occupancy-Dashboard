@@ -5,24 +5,27 @@ import plotly.express as px
 import utils
 import data_analysis as da
 
-def render(app: Dash, data) -> dcc.Graph:
+def render(app: Dash, df) -> dcc.Graph:
 
     @app.callback(
         Output('metric-line', 'figure'),
-        Input('metric-radio-selection', 'value')
+        Input('metric-radio-selection', 'value'),
+        Input('interval-radio-selection', 'value')
     )
-    def update_metric_line(selected_metric):
+    def update_metric_line(metric, interval):
+        data = da.data_metrics_by_date(df, utils.date_intervals[interval])
+
         fig = px.line(
             data, 
-            x='OCCUPANCY_DATE', 
-            y=selected_metric,
-            title=f'{utils.data_type_labels[selected_metric]} Count over Time',
+            x='DATE_INTERVAL', 
+            y=metric,
+            title=f'{utils.data_type_labels[metric]} Count over Time',
             labels={
-                "OCCUPANCY_DATE": utils.data_type_labels["OCCUPANCY_DATE"],
-                selected_metric: utils.data_type_labels[selected_metric],
+                "DATE_INTERVAL": utils.data_type_labels["OCCUPANCY_DATE"],
+                metric: utils.data_type_labels[metric],
             }
         )
-        fig.update_yaxes(range=[0, data[selected_metric].max() * 1.1])
+        fig.update_yaxes(range=[0, data[metric].max() * 1.1])
         return fig
 
     return dcc.Graph(figure={}, id='metric-line')

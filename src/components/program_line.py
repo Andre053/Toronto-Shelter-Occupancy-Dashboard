@@ -5,21 +5,23 @@ import plotly.express as px
 import utils
 import data_analysis as da
 
-def render(app: Dash, data) -> dcc.Graph:
+def render(app: Dash, df) -> dcc.Graph:
 
     @app.callback(
         Output('program-line', 'figure'),
-        Input('program-radio-selection', 'value')
+        Input('program-radio-selection', 'value'),
+        Input('interval-radio-selection', 'value')
     )
-    def update_program_line(selected_metric):
+    def update_program_line(selected_metric, interval):
+        data = da.data_unique_by_date(df, utils.date_intervals[interval])
         
         fig = px.line(
             data, 
-            x='OCCUPANCY_DATE', 
+            x='DATE_INTERVAL', 
             y=selected_metric,
             title=f'{utils.data_type_labels[selected_metric]} Count over Time',
             labels={
-                "OCCUPANCY_DATE": utils.data_type_labels["OCCUPANCY_DATE"],
+                "DATE_INTERVAL": utils.data_type_labels["OCCUPANCY_DATE"],
                 selected_metric: utils.data_type_labels[selected_metric],
             }
         )

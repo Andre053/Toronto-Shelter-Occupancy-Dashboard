@@ -1,3 +1,5 @@
+from enum import Enum
+
 data_type_labels = {
     "OCCUPANCY_DATE": "Date",
     "SERVICE_USER_COUNT": "Service User Count",
@@ -9,4 +11,16 @@ data_type_labels = {
     "ORGANIZATION_ID": "Organizations",
     "LOCATION_ID": "Locations",
     "SHELTER_ID": "Shelters"
+}
+
+
+class TimeInterval(Enum):
+    DAILY = 1
+    MONTHLY = 2
+    YEARLY = 3
+
+date_intervals = {
+    "Daily": TimeInterval.DAILY,
+    "Monthly": TimeInterval.MONTHLY,
+    "Yearly": TimeInterval.YEARLY
 }
