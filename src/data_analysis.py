@@ -44,16 +44,25 @@ def data_metrics_by_date(df, start="2025-01-01", end="2025-10-01"):
 
     return df_grouped
 
+def data_unique_by_date(df, start="2025-01-01", end="2025-10-01"):
+    cols = [
+        "OCCUPANCY_DATE",
+        "ORGANIZATION_ID",
+        "PROGRAM_ID",
+        "SHELTER_ID",
+        "LOCATION_ID",
+    ]
+    df_filtered = data_in_date_range(df, start, end)[cols]
+    df_grouped = df_filtered.groupby('OCCUPANCY_DATE', as_index=False).agg('nunique')
 
+    return df_grouped
 
 def data_in_date_range(df, start, end):
     df_filtered = None
     
     if start and end:
         #df_filtered = df[df['OCCUPANCY_DATE'] >= start and df['OCCUPANCY_DATE'] <= end]
-        print("Start and end passed")
         df_filtered = df[df['OCCUPANCY_DATE'] >= start]
-
     elif start: 
         df_filtered = df[df['OCCUPANCY_DATE'] >= start]
     elif end: 
