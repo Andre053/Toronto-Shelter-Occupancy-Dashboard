@@ -8,3 +8,5 @@ Open Data Toronto.
 
 ## Features
 
+1. View data on metrics
+2. View data on programs
