@@ -1,21 +1,21 @@
 import pandas as pd
-from glob import glob
-import os
+from database.db_config import get_engine
 
-# TODO get all data
-def get_data():
-    print("Getting data")
 
-    #path = '../resources/data'
-    data_files = glob("../resources/data/*.csv")
+def get_data(start_date, end_date):
+    engine = get_engine()
 
-    data = []
-    for f in data_files:
-        df = pd.read_csv(f, index_col=None, header=0)
-        data.append(df)
-    df = pd.concat(data, axis=0, ignore_index=True)
+    query = f"""
+        SELECT *
+        FROM "SHELTER_OCCUPANCY"
+        WHERE "OCCUPANCY_DATE" >= '{start_date}' AND "OCCUPANCY_DATE" <= '{end_date}'
+        ORDER BY "OCCUPANCY_DATE";
+    """
+    df = pd.read_sql(query, engine)
+    df['OCCUPANCY_DATE'] = pd.to_datetime(df['OCCUPANCY_DATE'])
 
-    return prep_data(df)
+    #print("Loaded data with rows:", len(df))
+    return df
 
 def parse_date(date):
     date_length = len(date)

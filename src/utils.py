@@ -17,7 +17,6 @@ data_type_labels = {
     "SHELTER_ID": "Shelters"
 }
 
-
 class TimeInterval(Enum):
     DAILY = 1
     MONTHLY = 2

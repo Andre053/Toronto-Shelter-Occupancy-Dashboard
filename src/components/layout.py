@@ -18,8 +18,6 @@ def render(app: Dash) -> dbc.Container:
         Input('date-picker', 'end_date')
     )
     def update_data(start_date, end_date):
-        print("updating data store")
-
         start = None
         end = None
         if not start_date or not end_date:
@@ -29,9 +27,7 @@ def render(app: Dash) -> dbc.Container:
             start = pd.to_datetime(start_date)
             end = pd.to_datetime(end_date)
 
-        df = dm.get_data()
-
-        df = df[(df['OCCUPANCY_DATE'] >= start) & (df['OCCUPANCY_DATE'] <= end)]
+        df = dm.get_data(start, end)
 
         return df.to_json(date_format='iso', orient='split')
 
