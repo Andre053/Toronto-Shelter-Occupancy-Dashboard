@@ -3,16 +3,22 @@ from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import utils
+import pandas as pd
+
 import data_analysis as da
 
-def render(app: Dash, df) -> dcc.Graph:
+def render(app: Dash) -> dcc.Graph:
 
     @app.callback(
         Output('metric-line', 'figure'),
+        Input('filtered-data-store', 'data'),
         Input('metric-radio-selection', 'value'),
         Input('interval-radio-selection', 'value')
     )
-    def update_metric_line(metric, interval):
+    def update_metric_line(json_data, metric, interval):
+        if not json_data: return None
+        
+        df = utils.json_to_df(json_data)
         data = da.data_metrics_by_date(df, utils.date_intervals[interval])
 
         fig = px.line(

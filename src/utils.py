@@ -1,4 +1,8 @@
 from enum import Enum
+import pandas as pd
+from io import StringIO
+
+import data_management as dm
 
 data_type_labels = {
     "OCCUPANCY_DATE": "Date",
@@ -24,3 +28,8 @@ date_intervals = {
     "Monthly": TimeInterval.MONTHLY,
     "Yearly": TimeInterval.YEARLY
 }
+
+def json_to_df(data):
+    df = pd.read_json(StringIO(data), orient='split')
+    df['OCCUPANCY_DATE'] = pd.to_datetime(df['OCCUPANCY_DATE'])
+    return df

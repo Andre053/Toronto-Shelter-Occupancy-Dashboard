@@ -4,15 +4,6 @@ from datetime import datetime
 import utils
 
 def current_service_users(df):
-    # STAT 1, total service users today
-    #   - COLUMN: SERVICE_USER_COUNT
-    #   - AGGREGATION: SUM
-    #   - DATE RANGE: TODAY (or last element)
-    #   Steps
-    #       1. Get the final date
-    #       2. Get all related records
-    #       3. Aggregate the service user count
-
     # 1. get final date
     final_date = df['OCCUPANCY_DATE'].unique()[-1]
     print("Final date in dataset is:", final_date)
@@ -23,7 +14,7 @@ def current_service_users(df):
 
     return total_users
 
-def data_metrics_by_date(df, time_interval=utils.TimeInterval.DAILY, start="2025-01-01", end="2025-10-01"):
+def data_metrics_by_date(df, time_interval=utils.TimeInterval.DAILY):
     cols = [
         "OCCUPANCY_DATE",
         "SERVICE_USER_COUNT",
@@ -36,7 +27,7 @@ def data_metrics_by_date(df, time_interval=utils.TimeInterval.DAILY, start="2025
         "OCCUPIED_ROOMS",
         "UNOCCUPIED_ROOMS"
     ]
-    df_filtered = data_in_date_range(df, start, end)[cols]
+    df_filtered = df[cols]
 
     if time_interval == utils.TimeInterval.DAILY:
         df_grouped = df_filtered.groupby(['OCCUPANCY_DATE'], as_index=False).agg('sum')
@@ -55,7 +46,7 @@ def data_metrics_by_date(df, time_interval=utils.TimeInterval.DAILY, start="2025
 
     return "ERROR"
 
-def data_unique_by_date(df, time_interval=utils.TimeInterval.DAILY, start="2025-01-01", end="2025-10-01"):
+def data_unique_by_date(df, time_interval=utils.TimeInterval.DAILY):
     cols = [
         "OCCUPANCY_DATE",
         "ORGANIZATION_ID",
@@ -63,7 +54,7 @@ def data_unique_by_date(df, time_interval=utils.TimeInterval.DAILY, start="2025-
         "SHELTER_ID",
         "LOCATION_ID",
     ]
-    df_filtered = data_in_date_range(df, start, end)[cols]
+    df_filtered = df[cols]
 
     if time_interval == utils.TimeInterval.DAILY:
         df_grouped = df_filtered.groupby(['OCCUPANCY_DATE'], as_index=False).agg('nunique')
@@ -89,7 +80,7 @@ def data_stacked_by_date_beds(df, metric1, metric2, time_interval=utils.TimeInte
         metric1,
         metric2,
     ]
-    df_filtered = data_in_date_range(df, start, end)[cols]
+    df_filtered = df[cols]
 
     if time_interval == utils.TimeInterval.DAILY:
         df_grouped = df_filtered.groupby(['OCCUPANCY_DATE'], as_index=False).agg('nunique')
@@ -111,28 +102,9 @@ def data_stacked_by_date_beds(df, metric1, metric2, time_interval=utils.TimeInte
 
     return "ERROR"
 
-def data_in_date_range(df, start, end):
-    date_format = "%Y-%m-%d"
-
-    start = datetime.strptime(start, date_format)
-    end = datetime.strptime(end, date_format)
-    
-    df_filtered = None
-
-    if start and end:
-        #df_filtered = df[df['OCCUPANCY_DATE'] >= start and df['OCCUPANCY_DATE'] <= end]
-        df_filtered = df[df['OCCUPANCY_DATE'] >= start]
-    elif start: 
-        df_filtered = df[df['OCCUPANCY_DATE'] >= start]
-    elif end: 
-        df_filtered = df[df['OCCUPANCY_DATE'] <= end]
-
-    return df_filtered
-
 def mean_service_users(df, stat, start, end):
-    df_filtered = data_in_date_range(df, start, end)
     # 2. sum for each date
-    df_agg = df_filtered.groupby('OCCUPANCY_DATE').agg('sum')
+    df_agg = df.groupby('OCCUPANCY_DATE').agg('sum')
     # 3. mean over all dates
     mean_val = df_agg[stat].mean()
     

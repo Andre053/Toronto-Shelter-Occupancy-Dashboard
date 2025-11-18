@@ -4,15 +4,21 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import utils
 import data_analysis as da
+import pandas as pd
 
-def render(app: Dash, df) -> dcc.Graph:
+def render(app: Dash) -> dcc.Graph:
 
     @app.callback(
         Output('program-line', 'figure'),
+        Input('filtered-data-store', 'data'),
         Input('program-radio-selection', 'value'),
         Input('interval-radio-selection', 'value')
     )
-    def update_program_line(selected_metric, interval):
+    def update_program_line(json_data, selected_metric, interval):
+        if not json_data: return None
+
+        df = utils.json_to_df(json_data)
+
         data = da.data_unique_by_date(df, utils.date_intervals[interval])
         
         fig = px.line(

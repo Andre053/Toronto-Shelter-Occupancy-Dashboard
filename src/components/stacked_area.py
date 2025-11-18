@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 import utils
 import data_analysis as da
+import pandas as pd
 
 def get_graph_details(metric, time_interval, df):
     data = None
@@ -16,14 +17,18 @@ def get_graph_details(metric, time_interval, df):
         title='Average Monthly Occupied vs. Unoccupied Rooms'
     return data, title
 
-def render(app: Dash, df) -> dcc.Graph:
+def render(app: Dash) -> dcc.Graph:
 
     @app.callback(
         Output('stacked-bar', 'figure'),
+        Input('filtered-data-store', 'data'),
         Input('stacked-radio-selection', 'value'),
         Input('interval-radio-selection', 'value')
     )
-    def update_stacked_bar(selected_metric, selected_interval):
+    def update_stacked_bar(json_data, selected_metric, selected_interval):
+        if not json_data: return None
+
+        df = utils.json_to_df(json_data)
         data, title = get_graph_details(selected_metric, utils.date_intervals[selected_interval], df)
         fig = px.area(
             data, 

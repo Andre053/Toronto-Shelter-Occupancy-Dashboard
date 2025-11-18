@@ -1,10 +1,19 @@
 import pandas as pd
+from glob import glob
+import os
 
 # TODO get all data
 def get_data():
     print("Getting data")
 
-    df = pd.read_csv('../resources/data/data_2025.csv')
+    #path = '../resources/data'
+    data_files = glob("../resources/data/*.csv")
+
+    data = []
+    for f in data_files:
+        df = pd.read_csv(f, index_col=None, header=0)
+        data.append(df)
+    df = pd.concat(data, axis=0, ignore_index=True)
 
     return prep_data(df)
 
