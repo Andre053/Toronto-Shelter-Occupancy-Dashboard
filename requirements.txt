@@ -1,0 +1,10 @@
+dash-bootstrap-components
+dash
+numpy
+pandas
+plotly
+python-dotenv
+requests
+psycopg2-binary
+matplotlib
+SQLAlchemy

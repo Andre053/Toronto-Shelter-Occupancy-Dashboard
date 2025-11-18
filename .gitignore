@@ -1,4 +1,6 @@
 .venv
 PLANNING.md
 ARTICLE.md
-__pycache__
+__pycache__/
+*.pyc
+GLOBALS.txt

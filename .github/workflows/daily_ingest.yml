@@ -2,9 +2,9 @@ name: Daily Data Ingestion
 
 on:
   schedule:
-    # Runs at 2 AM UTC every day
-    - cron: '0 4 * * *'
-  workflow_dispatch:  # Allows manual triggering
+    # Runs at 4 AM ETC every day
+    - cron: '0 9 * * *'
+  workflow_dispatch:  # For manual triggering
 
 jobs:
   ingest:
@@ -24,7 +24,8 @@ jobs:
         pip install -r requirements.txt
     
     - name: Run ingestion
+      working-directory: ./src
       env:
         DB_URL: ${{ secrets.DATABASE_URL }}
       run: |
-        python ./src/database/db_ingest.py
+        python database/db_ingest.py
