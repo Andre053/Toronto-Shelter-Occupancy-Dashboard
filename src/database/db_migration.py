@@ -2,6 +2,9 @@ import pandas as pd
 
 import glob
 from db_config import get_engine
+from db_utils import parse_date, prep_df
+
+
 
 def migrate_data():
 
@@ -16,9 +19,9 @@ def migrate_data():
     df = pd.concat(data, axis=0, ignore_index=True)
 
     # convert date column
-    df['OCCUPANCY_DATE'] = pd.to_datetime(df['OCCUPANCY_DATE'])
+    df = prep_df(df)
 
-    table_name = 'shelter-occupancy-data'
+    table_name = 'SHELTER_OCCUPANCY'
 
     df.to_sql(
         table_name,
