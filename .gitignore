@@ -4,3 +4,4 @@ ARTICLE.md
 __pycache__/
 *.pyc
 GLOBALS.txt
+/src/plotly-cloud.toml
