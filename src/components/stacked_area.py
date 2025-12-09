@@ -26,10 +26,14 @@ def render(app: Dash) -> dcc.Graph:
         Input('interval-radio-selection', 'value')
     )
     def update_stacked_bar(json_data, selected_metric, selected_interval):
-        if not json_data: return None
-
+        if not json_data:
+            print("No json data")
+            return None
         df = utils.json_to_df(json_data)
         data, title = get_graph_details(selected_metric, utils.date_intervals[selected_interval], df)
+        if data.empty:
+            print("Error with data")
+            return None
         fig = px.area(
             data, 
             x='DATE_INTERVAL',

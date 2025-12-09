@@ -2,7 +2,7 @@ from dash import Dash, html, dcc, callback, Output, Input, dash_table
 import dash_bootstrap_components as dbc
 import pandas as pd
 
-from components import program_dropdown, program_table, program_line, metric_dropdown, metric_table, metric_line, date_selector, stacked_dropdown, interval_dropdown, stacked_area
+from components import program_dropdown, program_table, program_line, metric_dropdown, metric_table, metric_line, date_selector, stacked_dropdown, interval_dropdown, stacked_area, loading_spinner, stats_card, overall_stats
 
 import data_analysis as da
 import data_management as dm
@@ -50,18 +50,30 @@ def render(app: Dash) -> dbc.Container:
             date_selector.render(app),
         ], style={'marginTop': '5px', 'marginBottom': '10px'}),
         dbc.Row([
+            dbc.Col([
+                stats_card.render(app, "Total records", "stat-total"),
+                stats_card.render(app, "Total days", "stat-total-days"),
+                stats_card.render(app, "Average users", "stat-average"),
+                stats_card.render(app, "Change in users", "stat-average-change"),
+                stats_card.render(app, "Max users", "stat-max"),
+                stats_card.render(app, "Min users", "stat-min"),
+            ], style={'display': 'flex', 'alignItems': 'center', 'fontSize': '8px'})
+        ]),
+        dbc.Row([
             html.H2(children="Occupancy metrics")
         ]),
         dbc.Row([
             metric_dropdown.render(app)
         ]),
+        #dbc.Row([
+        #    dbc.Col([
+        #        stats_card.render(app, "Metric stat 1", "metric-stat-1")
+        #    ])
+        #]),
         dbc.Row([
             dbc.Col([
-                metric_table.render(app)
-            ], width=4),
-            dbc.Col([
-                metric_line.render(app)
-            ], width=8),
+                loading_spinner.render(app, "loading-metric-line", [metric_line.render(app)])
+            ]),
         ]),
         dbc.Row([
             html.H2(children="Program metrics")
@@ -71,11 +83,8 @@ def render(app: Dash) -> dbc.Container:
         ]),
         dbc.Row([
             dbc.Col([
-                program_table.render(app)
-            ], width=4),
-            dbc.Col([
-                program_line.render(app)
-            ], width=8),
+                loading_spinner.render(app, "loading-program-line", [program_line.render(app)])
+            ]),
         ]),
         dbc.Row([
             html.H2(children="Occupied vs. Unoccupied metrics")
@@ -85,7 +94,7 @@ def render(app: Dash) -> dbc.Container:
         ]),
         dbc.Row([
             dbc.Col([
-                stacked_area.render(app)
+                loading_spinner.render(app, "loading-stacked-line", [stacked_area.render(app)])
             ], width=10),
         ]),
         dcc.Store(id='filtered-data-store')

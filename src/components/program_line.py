@@ -15,12 +15,15 @@ def render(app: Dash) -> dcc.Graph:
         Input('interval-radio-selection', 'value')
     )
     def update_program_line(json_data, selected_metric, interval):
-        if not json_data: return None
-
+        if not json_data:
+            print("No json data")
+            return None
         df = utils.json_to_df(json_data)
 
         data = da.data_unique_by_date(df, utils.date_intervals[interval])
-        
+        if data.empty:
+            print("Error with data")
+            return None
         fig = px.line(
             data, 
             x='DATE_INTERVAL', 
