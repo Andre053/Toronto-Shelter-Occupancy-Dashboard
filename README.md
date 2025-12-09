@@ -6,7 +6,7 @@ This Dash application aims to provide useful analytics and visualizations for un
 the current, and past, state of the Toronto shelter system. It uses data published daily by 
 Open Data Toronto.
 
-![Screenshot of application rendered locally on December 9, 2025.](https://github.com/Andre053/Toronto-Shelter-Occupancy-Dashboard/blob/main/resources/images/demo-12-2025.jpg?raw=true)
+![Screenshot of application rendered locally on December 9, 2025.](https://github.com/Andre053/Toronto-Shelter-Occupancy-Dashboard/blob/main/resources/images/demo-12-2025.png?raw=true)
 
 ## Features
 1. View line graph of occupancy metrics: Service user count, occupied/unoccupied beds, occupied/unoccupied rooms
